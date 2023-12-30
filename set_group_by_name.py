@@ -1,7 +1,5 @@
 
 from zabbix_api import ZabbixAPI
-import math
-import time
 import sys
 import json
 
@@ -35,7 +33,7 @@ def getHostList(zabbixName,host_list):
         getHosts = zabbix.host.get({"selectHosts": ["host"], "selectInterfaces": ["ip", "details"], "output": ["host"], "filter": { "ip": host_list }})
     return getHosts
 
-def messUpdateHostId(zabbixName,groupName,hostids,outputFile):
+def messUpdateHostId(zabbixName,groupName,hostids):
     global id, pw, f, host_list
     zabbix = api_login(zabbixName)
     getGroup = zabbix.hostgroup.get({ "output": ["groupids"],  "filter": { "name": groupName }})
@@ -65,5 +63,5 @@ for line in getHostList:
     form['hostid'] = line.get("hostid")
     getHostIds.append(form)
 
-messUpdateHostId(zabbix_name,group_name,getHostIds,"")
+messUpdateHostId(zabbix_name,group_name,getHostIds)
 # print(f"총 {len(result)}개")
