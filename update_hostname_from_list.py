@@ -30,17 +30,16 @@ def api_login(zabbixName):
     zabbix.login(CONFIG['ZabbixServerInfo'][zabbixName]['user'],CONFIG['ZabbixServerInfo'][zabbixName]['password'])
     return zabbix
 
-def getHostList(zabbixName,host_list):
-    zabbix = api_login(zabbixName)
-    getHosts = zabbix.host.get({"selectHosts": ["host"], "selectInterfaces": ["ip", "details"], "output": ["host"], "filter": { "host": host_list }})
+def getHostList(session,host_list):
+    getHosts = session.host.get({"selectHosts": ["host"], "selectInterfaces": ["ip", "details"], "output": ["host"], "filter": { "host": host_list }})
     return getHosts
 
-def changeHostName(zabbixName,host_id,host_change_name):
-    zabbix = api_login(zabbixName)
-    result = zabbix.host.update({"hostid": host_id, "host": host_change_name })
+def changeHostName(session,host_id,host_change_name):
+    result = session.host.update({"hostid": host_id, "host": host_change_name })
     return result
 
 host_list = []
+session = api_login(zabbix_name)
 
 # 파일리스트 가져오기
 file_path = host_name_list
@@ -51,7 +50,7 @@ with open(file_path, 'r') as file:
         new_name = column[1]
         host_list.append(host)
 
-hostList = getHostList(zabbix_name,host_list)
+hostList = getHostList(session,host_list)
 print(hostList)
 # getHostIDs = [hostid.get('hostid') for hostid in hostList]
 
