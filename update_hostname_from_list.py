@@ -1,14 +1,10 @@
-
-from zabbix_api import ZabbixAPI
-import math
-import time
+from auth import login, logout
 import sys
 import json
 
 f = open("config.json", encoding="UTF-8")
 CONFIG = json.loads(f.read())
 f.close()
-
 
 argv = sys.argv
 if len(argv) < 2:
@@ -21,14 +17,10 @@ else:
     zabbix_name = argv[1]
     host_name_list = argv[2]
 
+
 def print_and_write(file, text):
     # print(text)
     print(text, file=file)
-
-def api_login(zabbixName):
-    zabbix = ZabbixAPI(server=CONFIG['ZabbixServerInfo'][zabbixName]['URL'])
-    zabbix.login(CONFIG['ZabbixServerInfo'][zabbixName]['user'],CONFIG['ZabbixServerInfo'][zabbixName]['password'])
-    return zabbix
 
 def getHostList(session,host_list):
     getHosts = session.host.get({"selectHosts": ["host"], "selectInterfaces": ["ip", "details"], "output": ["host"], "filter": { "host": host_list }})
@@ -39,7 +31,7 @@ def changeHostName(session,host_id,host_change_name):
     return result
 
 host_list = []
-session = api_login(zabbix_name)
+session = login(zabbix_name)
 
 # 파일리스트 가져오기
 file_path = host_name_list
@@ -52,7 +44,10 @@ with open(file_path, 'r') as file:
 
 hostList = getHostList(session,host_list)
 print(hostList)
+
 # getHostIDs = [hostid.get('hostid') for hostid in hostList]
 
 # print(f"Total rquest search {len(host_list)}")
 # print(f"Total result {len(getHostList)}")
+
+logout(session)
