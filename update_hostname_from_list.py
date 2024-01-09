@@ -2,10 +2,6 @@ from auth import login, logout
 import sys
 import json
 
-f = open("config.json", encoding="UTF-8")
-CONFIG = json.loads(f.read())
-f.close()
-
 argv = sys.argv
 if len(argv) < 2:
     print("Please input zabbix name.")
