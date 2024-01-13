@@ -19,6 +19,37 @@ def print_and_write(file, text):
     print(text)
     print(text, file=file)
 
+def remove_first_bracket(sentence):
+    # 대괄호 안의 문자 또는 공백을 찾는 정규식 패턴
+    pattern = r'\[.*?\]'
+    
+    # 정규식 패턴과 매치되는 부분을 찾아 첫 번째 대괄호를 제거
+    match = re.search(pattern, sentence)
+    
+    if match:
+        # 매치된 부분을 제거하고 결과 반환
+        modified_sentence = sentence[:match.start()] + sentence[match.end():]
+        return modified_sentence
+    else:
+        # 대괄호가 없을 경우 원래 문장 반환
+        return sentence
+
+def remove_first_whitespace(sentence):
+    # 첫 번째 공백을 찾는 정규식 패턴
+    pattern = r'^\s+'
+    
+    # 정규식 패턴과 매치되는 부분을 찾아 첫 번째 공백을 제거
+    match = re.search(pattern, sentence)
+    
+    if match:
+        # 매치된 부분을 제거하고 결과 반환
+        modified_sentence = sentence[:match.end()] + sentence[match.end():]
+        return modified_sentence
+    else:
+        # 공백이 없을 경우 원래 문장 반환
+        return sentence
+     
+
 
 def getTemplateList(sesison,templateName,outputFile):
     templateDatas = sesison.template.get({ "output": ["name", "templateid"],  "filter": { "name": templateName }})
@@ -109,23 +140,29 @@ def getTriggerList(session,template_id_to_name,discovery):
     result = {}
 
     # 정규식 패턴
-    # pattern = r"\[(.*?)\]"
+    pattern = r"\[(.*?)\]"
 
     for data in trigger_datas:
         expression = data.get('expression').replace('\n', '').replace('\r', '')
+        recovery_expression = data.get('recovery_expression').replace('\n', '').replace('\r', '')
+        description = remove_first_whitespace(remove_first_bracket(data.get('description')))
         status = ''
+        code = ''
         if data.get('status') == '0':
             status = '활성'
         elif data.get('status') == '1':
             status = '비활성'
-        result[data.get('triggerid')] = f"{data.get('description')}@{expression}@{data.get('recovery_expression')}@{priority[int(data.get('priority'))]}@{data.get('opdata')}@{status}"
-        # matches = re.findall(pattern, data.get('description'))
-        # print(matches)
+        matches = re.findall(pattern, data.get('description'))
+        if len(matches) > 0:
+            code = matches[0]
+
+        result[data.get('triggerid')] = f"{code}@{description}@{expression}@{recovery_expression}@{priority[int(data.get('priority'))]}@{data.get('opdata')}@{status}"
     return result
 
 def process_item_list(item_list, trigger_id_to_data):
     for item in item_list:
-        item[9] = f"\n{item[0]}@@@@@@@@@".join([trigger_id_to_data[sub_dict['triggerid']] for sub_dict in item[9]])
+        # item[9] = f"\n{item[0]}@@@@@@@@@".join([trigger_id_to_data[sub_dict['triggerid']] for sub_dict in item[9]])
+        item[9] = f"\n{item[0]}@{item[1]}@{item[2]}@{item[3]}@{item[4]}@{item[5]}@{item[6]}@{item[7]}@{item[8]}@".join([trigger_id_to_data[sub_dict['triggerid']] for sub_dict in item[9]])
         item[9] = item[9] if item[9] else ""
         print('@'.join(map(str, item)))
 
@@ -146,4 +183,3 @@ itemprototype_list = getItemList(session,template_id_to_name,'y')
 # 결과 출력 
 process_item_list(item_list, trigger_id_to_data)
 process_item_list(itemprototype_list, triggerprototype_id_to_data)
-
