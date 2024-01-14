@@ -22,34 +22,17 @@ def print_and_write(file, text):
 def remove_first_bracket(sentence):
     # 대괄호 안의 문자 또는 공백을 찾는 정규식 패턴
     pattern = r'\[.*?\]'
-    
     # 정규식 패턴과 매치되는 부분을 찾아 첫 번째 대괄호를 제거
     match = re.search(pattern, sentence)
-    
+
     if match:
         # 매치된 부분을 제거하고 결과 반환
         modified_sentence = sentence[:match.start()] + sentence[match.end():]
-        return modified_sentence
+        result = modified_sentence.strip()
+        return result
     else:
         # 대괄호가 없을 경우 원래 문장 반환
         return sentence
-
-def remove_first_whitespace(sentence):
-    # 첫 번째 공백을 찾는 정규식 패턴
-    pattern = r'^\s+'
-    
-    # 정규식 패턴과 매치되는 부분을 찾아 첫 번째 공백을 제거
-    match = re.search(pattern, sentence)
-    
-    if match:
-        # 매치된 부분을 제거하고 결과 반환
-        modified_sentence = sentence[:match.end()] + sentence[match.end():]
-        return modified_sentence
-    else:
-        # 공백이 없을 경우 원래 문장 반환
-        return sentence
-     
-
 
 def getTemplateList(sesison,templateName,outputFile):
     templateDatas = sesison.template.get({ "output": ["name", "templateid"],  "filter": { "name": templateName }})
@@ -145,7 +128,7 @@ def getTriggerList(session,template_id_to_name,discovery):
     for data in trigger_datas:
         expression = data.get('expression').replace('\n', '').replace('\r', '')
         recovery_expression = data.get('recovery_expression').replace('\n', '').replace('\r', '')
-        description = remove_first_whitespace(remove_first_bracket(data.get('description')))
+        description = remove_first_bracket(data.get('description'))
         status = ''
         code = ''
         if data.get('status') == '0':
@@ -171,7 +154,9 @@ file_path = template_list_file
 with open(file_path, 'r') as file:
     lines = file.read().splitlines()
     template_list = [line for line in lines]
-
+string = " 테스트"
+print(string.strip())
+exit()
 session = login(zabbix_name)
 # application_id_to_name = getApplicationList(session,)
 template_id_to_name = getTemplateList(session,template_list,'')
