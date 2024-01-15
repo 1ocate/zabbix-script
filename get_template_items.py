@@ -42,6 +42,34 @@ def getTemplateList(sesison,templateName,outputFile):
 
     return result
 
+def getDiscoveryList(sesison,template_id_to_name):
+    templateids = list(template_id_to_name.keys())
+    discoveryDatas = sesison.discoveryrule.get({ "output": ["hostid", "name", "key_", "delay", "history", "status"],  "hostids":templateids })
+    newItem_list= []
+    for discovery in discoveryDatas:
+        status = ''
+        if discovery.get('status') == '0':
+            status = '활성'
+        elif discovery.get('status') == '1':
+            status = '비활성'
+        newItem = []
+        newItem.append(template_id_to_name[discovery.get('hostid')])
+        newItem.append('discovery')
+        newItem.append(discovery.get('key_'))
+        newItem.append(discovery.get('delay'))
+        newItem.append(discovery.get('history'))
+        newItem.append(status)
+        newItem.append('X')
+        newItem.append('')
+        newItem.append('')
+        newItem.append('')
+        newItem.append('')
+        newItem.append('')
+        newItem_list.append(newItem)
+        # result[data.get('hostid')] = data.get('name')
+    # result[data.get('triggerid')] = f"{code}@{description}@{expression}@{recovery_expression}@{priority[int(data.get('priority'))]}@{data.get('opdata')}@{status}"
+    return newItem_list
+
 
 def getApplicationList(sesison, applicationids):
     application_datas = sesison.application.get({ "output": ["applicationid", "name"], "filter": { "applicationid": applicationids }})
@@ -99,7 +127,6 @@ def getItemList(session,template_id_to_name,discovery):
             newItem_list.append(newItem)
     else:
         print("아이템을 찾을 수 없습니다.")
-        exit()
 
     return newItem_list
 
@@ -145,18 +172,22 @@ def getTriggerList(session,template_id_to_name,discovery):
 def process_item_list(item_list, trigger_id_to_data):
     for item in item_list:
         # item[9] = f"\n{item[0]}@@@@@@@@@".join([trigger_id_to_data[sub_dict['triggerid']] for sub_dict in item[9]])
-        item[9] = f"\n{item[0]}@{item[1]}@{item[2]}@{item[3]}@{item[4]}@{item[5]}@{item[6]}@{item[7]}@{item[8]}@".join([trigger_id_to_data[sub_dict['triggerid']] for sub_dict in item[9]])
-        item[9] = item[9] if item[9] else ""
+        if trigger_id_to_data !="":
+            item[9] = f"\n{item[0]}@{item[1]}@{item[2]}@{item[3]}@{item[4]}@{item[5]}@{item[6]}@{item[7]}@{item[8]}@".join([trigger_id_to_data[sub_dict['triggerid']] for sub_dict in item[9]])
+            item[9] = item[9] if item[9] else ""
+
         print('@'.join(map(str, item)))
 
 # 파일리스트 가져오기
 file_path = template_list_file
 with open(file_path, 'r') as file:
+
     lines = file.read().splitlines()
-    template_list = [line for line in lines]
-string = " 테스트"
-print(string.strip())
-exit()
+    if len(lines) > 1:
+        template_list = [line for line in lines]
+    else: 
+        template_list = lines
+
 session = login(zabbix_name)
 # application_id_to_name = getApplicationList(session,)
 template_id_to_name = getTemplateList(session,template_list,'')
@@ -164,7 +195,8 @@ trigger_id_to_data = getTriggerList(session,template_id_to_name,'')
 triggerprototype_id_to_data = getTriggerList(session,template_id_to_name,'y')
 item_list = getItemList(session,template_id_to_name,'')
 itemprototype_list = getItemList(session,template_id_to_name,'y')
-
+discovery_list = getDiscoveryList(session,template_id_to_name)
 # 결과 출력 
 process_item_list(item_list, trigger_id_to_data)
 process_item_list(itemprototype_list, triggerprototype_id_to_data)
+process_item_list(discovery_list,'')
