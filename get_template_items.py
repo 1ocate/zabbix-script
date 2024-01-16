@@ -55,6 +55,8 @@ def getDiscoveryList(sesison,template_id_to_name):
         newItem = []
         newItem.append(template_id_to_name[discovery.get('hostid')])
         newItem.append('discovery')
+        newItem.append(discovery.get('name'))
+        newItem.append(discovery.get(''))
         newItem.append(discovery.get('key_'))
         newItem.append(discovery.get('delay'))
         newItem.append(discovery.get('history'))
