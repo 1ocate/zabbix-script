@@ -85,9 +85,9 @@ def getItemList(session,template_id_to_name,discovery):
     templateids = list(template_id_to_name.keys())
     # discovery값이 'y'면 prototype
     if discovery == 'y':
-        item_datas = session.itemprototype.get({ "selectTriggers": ["triggerid"], "expandExpression": "y", "selectApplications": ["name"], "output": ["hostid", "name", "key_", "delay", "history", "status"], "templateids":templateids })
+        item_datas = session.itemprototype.get({ "selectTriggers": ["triggerid"], "expandExpression": "y", "selectApplications": ["name"], "output": ["template", "hostid", "name", "key_", "delay", "history", "status"], "templateids":templateids })
     else:
-        item_datas = session.item.get({ "selectTriggers": ["triggerid"], "expandExpression": "y", "selectApplications": ["name"], "output": ["hostid", "name", "key_", "delay", "history", "status"], "templateids":templateids })
+        item_datas = session.item.get({ "selectTriggers": ["triggerid"], "expandExpression": "y", "selectApplications": ["name"], "output": ["template", "hostid", "name", "key_", "delay", "history", "status"], "templateids":templateids })
     newItem_list= []
     if len(item_datas) != 0:
         for item in item_datas:
