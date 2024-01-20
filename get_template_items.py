@@ -83,6 +83,7 @@ def getApplicationList(sesison, applicationids):
 
 def wgetItemList(session,template_id_to_name,discovery):
     # templateid는 상속 템플릿의 아이템 id
+    # master_itemid는 dependent item
     templateids = list(template_id_to_name.keys())
     # discovery값이 'y'면 prototype
     if discovery == 'y':
