@@ -1,12 +1,9 @@
 
-from zabbix_api import ZabbixAPI
+from auth import login, logout
+import math
+import time
 import sys
 import json
-
-f = open("config.json", encoding="UTF-8")
-CONFIG = json.loads(f.read())
-f.close()
-
 
 argv = sys.argv
 if len(sys.argv) != 4:
@@ -20,32 +17,38 @@ def print_and_write(file, text):
     # print(text)
     print(text, file=file)
 
-def api_login(zabbixName):
-    zabbix = ZabbixAPI(server=CONFIG['ZabbixServerInfo'][zabbixName]['URL'])
-    zabbix.login(CONFIG['ZabbixServerInfo'][zabbixName]['user'],CONFIG['ZabbixServerInfo'][zabbixName]['password'])
-    return zabbix
 
-def getHostList(zabbixName,host_list):
-    zabbix = api_login(zabbixName)
-
-    getHosts = zabbix.host.get({"selectHosts": ["host"], "selectInterfaces": ["ip", "details"], "output": ["host"], "filter": { "host": host_list }})
+def getHostList(session,zabbix_name,host_list):
+    getHosts = session.host.get({"selectHosts": ["host"], "selectInterfaces": ["ip", "details"], "output": ["host"], "filter": { "host": host_list }})
     if getHosts == []:
-        getHosts = zabbix.host.get({"selectHosts": ["host"], "selectInterfaces": ["ip", "details"], "output": ["host"], "filter": { "ip": host_list }})
+        getHosts = session.host.get({"selectHosts": ["host"], "selectInterfaces": ["ip", "details"], "output": ["host"], "filter": { "ip": host_list }})
     return getHosts
 
-def messUpdateHostId(zabbixName,groupName,hostids):
-    global id, pw, f, host_list
-    zabbix = api_login(zabbixName)
-    getGroup = zabbix.hostgroup.get({ "output": ["groupids"],  "filter": { "name": groupName }})
+def createHostGroup(session,groupName):
+    createApi = session.hostgroup.create({"name":groupName})
+    createdGroupid  = createApi['groupids'][0]
+    if createdGroupid != None:
+        print(f"{groupName} 그룹이 생성되었습니다.")
+    
+    return createdGroupid
+
+def messUpdateHostId(session,groupName,hostids):
+    getGroup = session.hostgroup.get({ "output": ["groupids"],  "filter": { "name": groupName }})
     if getGroup == []:
         print("그룹을 찾을 수 없습니다.")
-        exit()
-    getGroupid = getGroup[0].get('groupid')
-    updateHosts = zabbix.hostgroup.massadd({"groups": [ { "groupid": getGroupid }], "hosts": hostids})
-    if updateHosts != {}:
-        print(f"{zabbixName}의 {groupName} 업데이트가 완료 되었습니다.")
+        answer = input(f"{groupName} 그룹을 생성할까요?")
+        if answer == 'Y' or answer == 'y':
+            getGroupid = createHostGroup(session,groupName)
+        else: 
+            print("그룹 적용을 중지 합니다.")
+            exit()
     else:
-        print(f"{zabbixName}의 {groupName} 업데이트가 실패 되었습니다.")
+        getGroupid = getGroup[0].get('groupid')
+    updateHosts = session.hostgroup.massadd({"groups": [ { "groupid": getGroupid }], "hosts": hostids})
+    if updateHosts != {}:
+        print(f"{zabbix_name}의 {groupName} 업데이트가 완료 되었습니다.")
+    else:
+        print(f"{zabbix_name}의 {groupName} 업데이트가 실패 되었습니다.")
 
 host_list = []
 file_path = host_list_file
@@ -55,7 +58,8 @@ with open(file_path, 'r') as file:
         host_list.append(host)
 
 
-getHostList = getHostList(zabbix_name,host_list)
+session = login(zabbix_name)
+getHostList = getHostList(session,zabbix_name,host_list)
 
 getHostIds = []
 for line in getHostList:
@@ -63,5 +67,8 @@ for line in getHostList:
     form['hostid'] = line.get("hostid")
     getHostIds.append(form)
 
-messUpdateHostId(zabbix_name,group_name,getHostIds)
+messUpdateHostId(session,group_name,getHostIds)
 # print(f"총 {len(result)}개")
+
+# 로그아웃
+logout(session)
