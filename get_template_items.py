@@ -208,3 +208,6 @@ discovery_list = getDiscoveryList(session,template_id_to_name)
 process_item_list(item_list, trigger_id_to_data)
 process_item_list(itemprototype_list, triggerprototype_id_to_data)
 process_item_list(discovery_list,'')
+
+# 로그아웃
+logout(session)
