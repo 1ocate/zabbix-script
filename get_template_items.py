@@ -81,7 +81,7 @@ def getApplicationList(sesison, applicationids):
 
     return result
 
-def wgetItemList(session,template_id_to_name,discovery):
+def getItemList(session,template_id_to_name,discovery):
     # templateid는 상속 템플릿의 아이템 id
     # master_itemid는 dependent item
     templateids = list(template_id_to_name.keys())
@@ -106,8 +106,8 @@ def wgetItemList(session,template_id_to_name,discovery):
                 newItem.append(item.get('applications')[0].get('name'))
             template_id = (item.get('templateid'))
             item_name = item.get('name')
-            if template_id != "0":
-                item_name = f"{template_id_to_name[item.get('templateid')]}: {item_name}"
+            # if template_id != "0":
+            #     item_name = f"{template_id_to_name[item.get('templateid')]}: {item_name}"
 
             newItem.append(item_name)
 
@@ -195,7 +195,6 @@ with open(file_path, 'r') as file:
         template_list = [line for line in lines]
     else: 
         template_list = lines
-
 session = login(zabbix_name)
 # application_id_to_name = getApplicationList(session,)
 template_id_to_name = getTemplateList(session,template_list,'')
