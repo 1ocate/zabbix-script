@@ -47,8 +47,8 @@ with open(file_path, 'r') as file:
 getHostList = getHostList(zabbix_name,host_list)
 
 for line in getHostList:
-    # print(f"{line.get('host')}|{line.get('interfaces')[0].get('ip')}")
-    print(f"{line.get('interfaces')[0].get('ip')}")
+    print(f"{line.get('host')}|{line.get('interfaces')[0].get('ip')}")
+    # print(f"{line.get('interfaces')[0].get('ip')}")
 
-print(f"Total rquest search {len(host_list)}")
-print(f"Total result {len(getHostList)}")
+print(f"총 검색 대상 갯수 {len(host_list)}")
+print(f"총 검색 결과 갯수 {len(getHostList)}")
