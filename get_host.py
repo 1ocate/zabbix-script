@@ -32,7 +32,9 @@ def api_login(zabbixName):
 
 def getHostList(zabbixName,host_list):
     zabbix = api_login(zabbixName)
-    getHosts = zabbix.host.get({"selectHosts": ["host"], "selectInterfaces": ["ip", "details"], "output": ["host"], "filter": { "ip": host_list }})
+    params = {"selectHosts": ["host"], "selectInterfaces": ["ip", "details"], "output": ["host"], "filter": { "ip": host_list }}
+    getHosts = zabbix.host.get(params)
+
     return getHosts
 
 
