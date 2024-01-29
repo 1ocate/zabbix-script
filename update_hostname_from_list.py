@@ -27,6 +27,7 @@ def changeHostName(session,host_id,change_name,ori_name):
     return result
 
 host_list = []
+new_host_list = []
 new_name = {}
 ori_name = {}
 
@@ -41,11 +42,18 @@ with open(file_path, 'r') as file:
         host = column[0]
         change_name = column[1]
         host_list.append(host)
+        new_host_list.append(change_name)
         new_name[host] = change_name
         ori_name[change_name] = host
 
 # 주어진 host_list에서 zabbix host list 가져오기
 zabbix_host_list = getHostList(session,host_list)
+already_exsist_host_list = getHostList(session,new_host_list)
+if len(already_exsist_host_list) > 0 :
+    for line in already_exsist_host_list:
+        print(line)
+        print("이름변경 중단")
+
 hostids = []
 hostid_new_name = {}
 
