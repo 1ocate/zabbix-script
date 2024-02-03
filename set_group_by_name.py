@@ -5,18 +5,6 @@ import time
 import sys
 import json
 
-argv = sys.argv
-if len(sys.argv) != 4:
-    print("Usage: python3 set_group_by_name.py <zabbix_name> <group_name> <host_list_file>")
-    sys.exit(1)
-
-zabbix_name = sys.argv[1]
-group_name = sys.argv[2]
-host_list_file = sys.argv[3]
-def print_and_write(file, text):
-    # print(text)
-    print(text, file=file)
-
 
 def getHostList(session,zabbix_name,host_list):
     getHosts = session.host.get({"selectHosts": ["host"], "selectInterfaces": ["ip", "details"], "output": ["host"], "filter": { "host": host_list }})
@@ -29,10 +17,9 @@ def createHostGroup(session,groupName):
     createdGroupid  = createApi['groupids'][0]
     if createdGroupid != None:
         print(f"{groupName} 그룹이 생성되었습니다.")
-    
     return createdGroupid
 
-def messUpdateHostId(session,groupName,hostids):
+def messUpdateHostId(session,groupName,hostids,zabbix_name):
     getGroup = session.hostgroup.get({ "output": ["groupids"],  "filter": { "name": groupName }})
     if getGroup == []:
         print("그룹을 찾을 수 없습니다.")
@@ -50,25 +37,42 @@ def messUpdateHostId(session,groupName,hostids):
     else:
         print(f"{zabbix_name}의 {groupName} 업데이트가 실패 되었습니다.")
 
-host_list = []
-file_path = host_list_file
-with open(file_path, 'r') as file:
-    for line in file:
-        host = line.strip('\n')
-        host_list.append(host)
+def main():
+    argv = sys.argv
+    if len(sys.argv) != 4:
+        print("Usage: python3 set_group_by_name.py <zabbix_name> <group_name> <host_list_file>")
+        sys.exit(1)
+
+    zabbix_name = sys.argv[1]
+    group_name = sys.argv[2]
+    host_list_file = sys.argv[3]
+    def print_and_write(file, text):
+        # print(text)
+        print(text, file=file)
 
 
-session = login(zabbix_name)
-getHostList = getHostList(session,zabbix_name,host_list)
+    host_list = []
+    file_path = host_list_file
+    with open(file_path, 'r') as file:
+        for line in file:
+            host = line.strip('\n')
+            host_list.append(host)
 
-getHostIds = []
-for line in getHostList:
-    form = {}
-    form['hostid'] = line.get("hostid")
-    getHostIds.append(form)
 
-messUpdateHostId(session,group_name,getHostIds)
-# print(f"총 {len(result)}개")
+    session = login(zabbix_name)
+    hostList = getHostList(session,zabbix_name,host_list)
 
-# 로그아웃
-logout(session)
+    hostIds = []
+    for line in hostList:
+        form = {}
+        form['hostid'] = line.get("hostid")
+        hostIds.append(form)
+
+    messUpdateHostId(session,group_name,hostIds,zabbix_name)
+    # print(f"총 {len(result)}개")
+
+    # 로그아웃
+    logout(session)
+
+if __name__ == "__main__":
+    main()
