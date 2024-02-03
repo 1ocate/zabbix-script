@@ -1,4 +1,5 @@
 from auth import login, logout
+from set_group_by_name import createHostGroup, messUpdateHostId
 import sys
 import json
 
@@ -48,11 +49,21 @@ with open(file_path, 'r') as file:
 
 # 주어진 host_list에서 zabbix host list 가져오기
 zabbix_host_list = getHostList(session,host_list)
-already_exsist_host_list = getHostList(session,new_host_list)
-if len(already_exsist_host_list) > 0 :
-    for line in already_exsist_host_list:
-        print(line)
-        print("이름변경 중단")
+exsist_host_list = getHostList(session,new_host_list)
+if len(exsist_host_list) > 0 :
+    exsist_hostids = []
+    for line in exsist_host_list:
+        form = {}
+        form['hostid'] = line.get("hostid")
+        exsist_hostids.append(form)
+
+
+    messUpdateHostId(session,"duplicate_hosts",exsist_hostids,zabbix_name)
+    print("변경될 호스트이름이 존재 합니다. 삭제하고 진행하세요.")
+    exit()
+
+else:
+    print("호스트이름 변경을 진행합니다.")
 
 hostids = []
 hostid_new_name = {}
