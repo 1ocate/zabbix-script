@@ -1,7 +1,6 @@
 from auth import login, logout
-from set_group_by_name import createHostGroup, messUpdateHostId
+from set_group_by_name import messUpdateHostId
 import sys
-import json
 
 argv = sys.argv
 if len(argv) < 2:
@@ -57,13 +56,12 @@ if len(exsist_host_list) > 0 :
         form['hostid'] = line.get("hostid")
         exsist_hostids.append(form)
 
-
     messUpdateHostId(session,"duplicate_hosts",exsist_hostids,zabbix_name)
-    print("변경될 호스트이름이 존재 합니다. 삭제하고 진행하세요.")
+    print("변경 될 호스트 이름의 호스트가 존재 합니다. 삭제하고 진행하세요.")
     exit()
 
 else:
-    print("호스트이름 변경을 진행합니다.")
+    print("호스트 이름 변경을 진행합니다.")
 
 hostids = []
 hostid_new_name = {}
