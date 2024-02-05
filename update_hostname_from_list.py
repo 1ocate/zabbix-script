@@ -55,6 +55,8 @@ if len(exsist_host_list) > 0 :
         form = {}
         form['hostid'] = line.get("hostid")
         exsist_hostids.append(form)
+    # delete group "duplicate_hosts"
+    # create group "duplicate_hosts"
 
     messUpdateHostId(session,"duplicate_hosts",exsist_hostids,zabbix_name)
     print("변경 될 호스트 이름의 호스트가 존재 합니다. 삭제하고 진행하세요.")
