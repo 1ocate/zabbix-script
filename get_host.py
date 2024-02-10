@@ -6,7 +6,6 @@ import time
 import sys
 import json
 
-
 argv = sys.argv
 if len(argv) < 2:
     print("Please input zabbix name.")
@@ -22,8 +21,7 @@ def print_and_write(file, text):
     # print(text)
     print(text, file=file)
 
-
-def getHostList(session,zabbix_name,host_list):
+def getHostList(session,host_list):
     getHosts = session.host.get({"selectHosts": ["host"], "selectInterfaces": ["ip", "details"], "output": ["host"], "filter": { "host": host_list }})
     if getHosts == []:
         getHosts = session.host.get({"selectHosts": ["host"], "selectInterfaces": ["ip", "details"], "output": ["host"], "filter": { "ip": host_list }})
@@ -38,7 +36,7 @@ with open(file_path, 'r') as file:
         search_list.append(host)
 
 session = login(zabbix_name)
-host_list = getHostList(session,zabbix_name,search_list)
+host_list = getHostList(session,search_list)
 
 for line in host_list:
     print(f"{line.get('host')}|{line.get('interfaces')[0].get('ip')}")
