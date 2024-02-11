@@ -1,10 +1,7 @@
 
 from zabbix_api import ZabbixAPI
 from auth import login, logout
-import math
-import time
 import sys
-import json
 
 argv = sys.argv
 if len(argv) < 2:
@@ -44,3 +41,5 @@ for line in host_list:
 
 print(f"총 검색 대상 갯수 {len(search_list)}")
 print(f"총 검색 결과 갯수 {len(host_list)}")
+
+logout(session)
