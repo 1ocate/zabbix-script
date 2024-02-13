@@ -19,6 +19,7 @@ def print_and_write(file, text):
     print(text, file=file)
 
 def getHostList(session,host_list):
+    #템플릿이 적용된 대상만 확인
     getHosts = session.host.get({"selectHosts": ["host"], "selectInterfaces": ["ip", "details"], "output": ["host"], "filter": { "host": host_list }})
     if getHosts == []:
         getHosts = session.host.get({"selectHosts": ["host"], "selectInterfaces": ["ip", "details"], "output": ["host"], "filter": { "ip": host_list }})
