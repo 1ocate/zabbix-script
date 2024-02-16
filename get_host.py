@@ -47,14 +47,19 @@ with open(file_path, 'r') as file:
 session = login(zabbix_name)
 host_list = getHostList(session,search_list)
 template_has_hosts = host_list['template_has_hosts']
-ready_add_hosts = host_list['ready_add_hosts']
+
+ready_add_hosts = []
+
+for host in host_list['template_has_hosts']:
+    if host not in template_has_hosts:
+        ready_add_hosts.append(host)
 
 if len(template_has_hosts) > 0:
     print("기 수용 대상")
-    for line in host_list['template_has_hosts']:
+    for line in template_has_hosts:
         if '_CRM' not in line:
             print(f"{line.get('host')}|{line.get('interfaces')[0].get('ip')}")
-        # print(f"{line.get('interfaces')[0].get('ip')}")
+            # print(f"{line.get('interfaces')[0].get('ip')}")
 
 if len(ready_add_hosts) > 0:
     print("수용 예정 대상")
@@ -62,7 +67,7 @@ if len(ready_add_hosts) > 0:
         print(f"{line.get('host')}|{line.get('interfaces')[0].get('ip')}")
 
 print(f"총 검색 대상 대수 {len(search_list)}")
-print(f"총 검색 결과 수용 대수 {len(host_list['template_has_hosts'])}")
-print(f"총 검색 결과 수용 예정 {len(host_list['ready_add_hosts'])}")
+print(f"총 검색 결과 수용 대수 {len(template_has_hosts)}")
+print(f"총 검색 결과 수용 예정 {len(ready_add_hosts)}")
 
 logout(session)
