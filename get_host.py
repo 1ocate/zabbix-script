@@ -58,7 +58,7 @@ if len(template_has_hosts) > 0:
     print("기 수용 대상")
     for line in template_has_hosts:
         host_name = line.get('host')
-        if host_name not in '_CRM':
+        if '_CRM' not in host_name:
             print(f"{host_name}|{line.get('interfaces')[0].get('ip')}")
             # print(f"{line.get('interfaces')[0].get('ip')}")
 
