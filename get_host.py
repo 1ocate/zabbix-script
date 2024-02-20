@@ -58,9 +58,12 @@ if len(template_has_hosts) > 0:
     print("기 수용 대상")
     for line in template_has_hosts:
         host_name = line.get('host')
+        interfaces = line.get('interfaces')
         if '_CRM' not in host_name:
-            print(f"{host_name}|{line.get('interfaces')[0].get('ip')}")
-            # print(f"{line.get('interfaces')[0].get('ip')}")
+            # print(interfaces)
+            for index in interfaces:
+                print(f"{host_name}|{index.get('ip')}")
+                # print(f"{line.get('interfaces')[0].get('ip')}")
 
 if len(ready_add_hosts) > 0:
     print("수용 예정 대상")
