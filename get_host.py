@@ -17,7 +17,7 @@ def print_and_write(file, text):
     # print(text)
     print(text, file=file)
 
-def getHostList(session,host_list):
+def get_host_data(session,host_list):
     #템플릿이 적용된 대상만 확인
     getHosts = session.host.get({"selectHosts": ["host"], "selectInterfaces": ["ip", "details"], "selectParentTemplates": [ "templateid" ], "output": ["host"], "filter": { "host": host_list }})
     if getHosts == []:
@@ -45,7 +45,7 @@ with open(file_path, 'r') as file:
         search_list.append(host)
 
 session = login(zabbix_name)
-host_list = getHostList(session,search_list)
+host_list = get_host_data(session,search_list)
 template_has_hosts = host_list['template_has_hosts']
 
 ready_add_hosts = []
