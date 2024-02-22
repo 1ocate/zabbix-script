@@ -60,7 +60,6 @@ if len(template_has_hosts) > 0:
         host_name = line.get('host')
         interfaces = line.get('interfaces')
         if '_CRM' not in host_name:
-            # print(interfaces)
             for index in interfaces:
                 print(f"{host_name}|{index.get('ip')}")
                 # print(f"{line.get('interfaces')[0].get('ip')}")
