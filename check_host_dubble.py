@@ -40,7 +40,7 @@ result_host_list = []
 for line in host_list_with_template:
     if len(line.get('parentTemplates')) > 0:
         print(f"{line.get('host')}|{line.get('interfaces')[0].get('ip')}|{line.get('status')}")
-        result_host_list.append(f"{line.get('host')}|{line.get('interfaces')[0].get('ip')}|{line.get('status')}")
+        result_host_list.append(f"{line}")
 
 print(f"총 검색 결과 갯수 {len(result_host_list)}")
 
