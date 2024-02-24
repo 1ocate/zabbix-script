@@ -1,6 +1,14 @@
 from zabbix_api import ZabbixAPI
 from auth import login, logout
 import sys
+# 반복 출력할 내용
+# from collections import Counter
+
+# my_list = [1, 2, 3, 4, 2, 3, 5, 6, 6]  # 대상 리스트 (실제 데이터로 대체해야 함)
+# counter = Counter(my_list)
+
+# duplicates = [item for item, count in counter.items() if count > 1]
+# print(duplicates)
 
 argv = sys.argv
 if len(argv) < 2:
@@ -43,5 +51,6 @@ for line in host_list_with_template:
         result_host_list.append(f"{line}")
 
 print(f"총 검색 결과 갯수 {len(result_host_list)}")
+
 
 logout(session)
