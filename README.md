@@ -1,8 +1,6 @@
 # Zabbix 업무용 스크립트
----
 
 ## 접속 정보 등록
----
 
 ### 접속정보 작성
 config.json.exmple 내용을 참조하여 config.json 파일 생성
