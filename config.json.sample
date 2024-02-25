@@ -1,9 +1,9 @@
 {
   "ZabbixServerInfo": {
-    "local": {
+    "zabbix_name": {
       "user": "",
       "password": "",
-      "URL": "http://zabbix.loc"
+      "URL": ""
     }
   }
 }
