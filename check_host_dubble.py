@@ -1,14 +1,7 @@
 from zabbix_api import ZabbixAPI
 from auth import login, logout
-import sys
-# 반복 출력할 내용
-# from collections import Counter
-
-# my_list = [1, 2, 3, 4, 2, 3, 5, 6, 6]  # 대상 리스트 (실제 데이터로 대체해야 함)
-# counter = Counter(my_list)
-
-# duplicates = [item for item, count in counter.items() if count > 1]
-# print(duplicates)
+from collections import Counter
+import sys,time
 
 argv = sys.argv
 if len(argv) < 2:
@@ -25,32 +18,71 @@ def print_and_write(file, text):
     # print(text)
     print(text, file=file)
 
-def getHostList(session):
-    getHosts = session.host.get({"selectHosts": ["host"], "selectInterfaces": ["ip", "details"], "output": ["host"], "filter": { "available": "0" }})
-    return getHosts
+def get_duplicate_hostids(session):
+    all_host_ips = []
+    all_host_datas = session.host.get({"selectHosts": ["host"], "selectInterfaces": ["ip"], "output": ["host","hostid"]})
+    if len(all_host_datas) > 0:
+        for line in all_host_datas:
+            host_name = line.get('host')
+            if '_CRM' not in host_name:
+                interfaces = line.get('interfaces')
+                # print(interfaces)
+                for index in interfaces:
+                    all_host_ips.append(index.get('ip'))
+
+    counter = Counter(all_host_ips)
+
+    duplicate_host_ips = [item for item, count in counter.items() if count > 1]
+    duplicate_host_datas = getHostListWithTemplate(session,duplicate_host_ips)
+    duplcate_hostids = [data.get('hostid') for data in duplicate_host_datas]
+    # print(duplcate_hostids)
+    return duplcate_hostids
 
 def getHostListWithTemplate(session,host_list):
-    getHosts = session.host.get({"selectHosts": ["host"], "selectInterfaces": ["ip", "details"], "selectParentTemplates": [ "templateid" ], "output": ["host", "status"], "filter": { "ip": host_list }})
-    return getHosts
+    template_has_hosts = []
+    getHosts = session.host.get({"selectHosts": ["host"], "selectInterfaces": ["ip", "details"], "selectParentTemplates": [ "templateid" ], "output": ["host", "status"], "filter": { "ip": host_list  }})
+    for host in getHosts:
+        if len(host.get('parentTemplates')) > 0:
+            template_has_hosts.append(host)
+    return template_has_hosts
+
+def getItemData(session, hostids):
+    getItemData = session.item.get({"selectHosts":["host"], "output": ["itemid","host"], "filter": { "name":"Host name of Zabbix agent running", "hostid":hostids}})
+    return getItemData
+
+def getHistoryData(session,itemids):
+    print(len(itemids))
+    getHistoryData = session.history.get({"output": ["itemid","value"], "history": 1, "itemids": itemids, "sortfield": ["clock","itemid"], "sortorder": "DESC", "limit": len(itemids)})
+    # getHistoryDAta = session.item.get({"output": ["itemid","value"], "history": 1, "itemids": itemids, "limit": len(itemids)})
+    return getHistoryData
 
 session = login(zabbix_name)
-host_list = getHostList(session)
-host_list_not_crm = []
-for line in host_list:
-    host = line.get('host')
+duplcate_hostids = get_duplicate_hostids(session)
+itemDatas = getItemData(session, duplcate_hostids)
+host_and_itemid = {}
+itemids = []
 
-    if '_CRM' not in host and 'jpt' not in host:
-       host_list_not_crm.append(line.get('interfaces')[0].get('ip'))
-    #host_list_not_crm.append(f"{line.get('host')}|{line.get('interfaces')[0].get('ip')}|{line.get('status')}")
-
-host_list_with_template = getHostListWithTemplate(session,host_list_not_crm)
-result_host_list = []
-for line in host_list_with_template:
-    if len(line.get('parentTemplates')) > 0:
-        print(f"{line.get('host')}|{line.get('interfaces')[0].get('ip')}|{line.get('status')}")
-        result_host_list.append(f"{line}")
-
-print(f"총 검색 결과 갯수 {len(result_host_list)}")
+for data in itemDatas:
+    host = data.get('hosts')[0].get('host')
+    itemid = data.get('itemid')
+    host_and_itemid[itemid] = host
+    itemids.append(itemid)
 
 
+check_host_list = []
+chunk_size = 30 
+itemidsGroups = [itemids[i:i+chunk_size] for i in range(0, len(itemids), chunk_size)]
+for itemidsGroup in itemidsGroups:
+    historyDatas = getHistoryData(session,itemidsGroup)
+    for data in historyDatas:
+        itemid = data.get('itemid')
+        agent_host_name = data.get('value')
+
+        if host_and_itemid[itemid] != agent_host_name:
+            check_host_list.append(f"host_name: {host_and_itemid[itemid]} agent_host_name: {agent_host_name}")
+
+    time.sleep(3)
+    # print(f"{chunk_size} 완료")
+for line in check_host_list:
+    print(line)
 logout(session)
