@@ -36,10 +36,15 @@ def logout(session):
         print("이미 로그아웃 되었습니다.")
         exit()
 
-def main():
-    zabbix_name = sys.argv[1]
+def main(argv):
+    if len(argv) < 2:
+        print("Usage: python3 auth.py <zabbix_name> ")
+        sys.exit(1)
+
+    zabbix_name = argv[1]
     session = login(zabbix_name)
     logout(session)
 
 if __name__ == "__main__":
-    main()
+    argv = sys.argv
+    main(argv)
