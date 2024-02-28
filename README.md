@@ -1,6 +1,8 @@
 # Zabbix 업무용 스크립트
 
-## 필수 패키지 설치
+## 준비 
+
+### 필수 패키지 설치
 ```bash
 # pip 또는 pip3
 $ pip3 install --trusted-host pypi.python.org --trusted-host files.pythonhosted.org --trusted-host pypi.org -r requirements.txt
