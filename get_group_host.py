@@ -11,10 +11,7 @@ f.close()
 
 argv = sys.argv
 if len(argv) < 2:
-    print("Please input zabbix name.")
-    sys.exit(1)
-elif len(argv) < 3:
-    print("Please group name.")
+    print("Usage: python3 get_group_host.py <zabbix_name> <group_name>")
     sys.exit(1)
 else:
     zabbix_name = argv[1]
