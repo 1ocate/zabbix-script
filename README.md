@@ -55,11 +55,69 @@ local서버에 Admin으로 로그인 하였습니다.
 ```
 ## 실행
 
+### Zabbix에 수용 여부 확인 하기
+
+```bash
+# 수용 확인 할  호스트 리스트 작성
+❯ cat api_test_list
+TEST_HOST_HP_G7
+TEST_SERVER
+TEST_HOST_10.10.10.10
+
+# 사용법
+# <zabbix_name> = 수용 확인 대상 Zabbix Server
+# <host_list_file> = 수용 확인 할 호스트 리스트 파일 이름
+# python 또는 python3
+$ python3 get_host.py
+Usage: python3 get_host.py <zabbix_name> <host_list_file>
+
+$ python3 get_host.py STAGE api_test_list
+기 수용 대상
+TEST_SERVER|10.4.224.35
+수용 예정 대상
+TEST_HOST_HP_G7|10.9.224.110
+TEST_HOST_10.10.10.10|10.4.224.29
+총 검색 대상 대수 3
+총 검색 결과 기 수용 대수 (템플릿 적용) 1
+총 검색 결과 수용 예정 (템플릿 미적용) 2
+로그아웃 완료
+```
+### Zabbix에 수용된 전체 대상 확인
+
+```bash
+# 사용법
+# <zabbix_name> = 수용 확인 대상 Zabbix Server
+# python 또는 python3
+❯ python3 get_all_host.py
+Usage: python3 get_all_host.py <zabbix_name>
+
+$ python3 get_all_host STAGE
+IP|수용 대상|템플릿 적용|활성화
+10.9.152.69|STAGE|O|X|Zabbix_proxy
+10.9.152.70|STAGE|O|X|Zabbix_proxy
+10.9.152.71|STAGE|O|X|Zabbix_proxy
+10.9.152.72|STAGE|O|X|Zabbix_proxy
+10.9.152.73|STAGE|O|X|Zabbix_proxy
+10.9.152.74|STAGE|O|X|Zabbix_proxy
+10.9.152.75|STAGE|O|X|Zabbix_proxy
+10.9.152.76|STAGE|O|X|Zabbix_proxy
+10.9.152.77|STAGE|O|X|Zabbix_proxy
+10.9.152.78|STAGE|O|X|Zabbix_proxy
+10.9.152.79|STAGE|O|X|Zabbix_proxy
+10.9.152.81|STAGE|O|X|Zabbix_proxy
+10.3.198.34|STAGE|O|X|No Proxy
+10.3.198.37|STAGE|O|X|No Proxy
+10.3.198.113|STAGE|O|X|No Proxy
+총 검색 결과 수용 대수 365
+로그아웃 완료
+
+```
+
 ### Zabbix 호스트 그룹에서 호스트 이름, IP 가져오기
 ```bash
 # 사용법
-# <zabbix_name> = 찾는 호스트 그룹이 존재하는 Zabbix Server
-# <group_name> = 찾으려는 Zabbix 호스트 그룹 이름
+# <zabbix_name> = 호스트 그룹이 존재하는 Zabbix Server
+# <group_name> = Zabbix 호스트 그룹 이름
 # python 또는 python3
 $ python3 get_group_host.py
 Usage: python3 get_group_host.py <zabbix_name> <group_name>
@@ -80,8 +138,8 @@ TEST_SERVER
 TEST_HOST_10.10.10.10
 
 # 사용법
-# <zabbix_name> = 찾는 호스트 그룹이 존재하는 Zabbix Server
-# <group_name> = 찾으려는 Zabbix 호스트 그룹 이름
+# <zabbix_name> = 호스트 그룹이 존재하는 Zabbix Server
+# <group_name> = Zabbix 호스트 그룹 이름
 # <host_list_file> = 그룹으로 묶을 호스트 작성
 # python 또는 python3
 $ python3 set_group_by_name.py
