@@ -1,6 +1,10 @@
 # Zabbix 업무용 스크립트
 
-## 준비 
+## 준비
+
+### 실행 환경 
+* python =< 3.10.12
+* pip =<  22.0.2
 
 ### 필수 패키지 설치
 ```bash
@@ -40,6 +44,7 @@ exmple: 2개의 Zabbix 접속 정보 local, stage 등록
 }
 ```
 ### Zabbix 접속 확인
+#### auth.py
 
 ```bash
 # python 또는 python3
