@@ -60,7 +60,7 @@ local서버에 Admin으로 로그인 하였습니다.
 ```
 ## 실행
 
-### Zabbix에 수용 여부 확인 하기
+### Zabbix에 수용 여부 확인
 #### get_host.py
 ```bash
 # 수용 확인 할  호스트 리스트 작성
@@ -115,9 +115,26 @@ IP|수용 대상|템플릿 적용|활성화
 10.3.198.113|STAGE|O|X|No Proxy
 총 검색 결과 수용 대수 365
 로그아웃 완료
+```
+### Zabbix 수용 대상 중 Zabbix에 등록된 호스트명, Agent에서 가져오는 호스트명 다른 대상 확인
+* 10분 이상 큐 발생 및 Active 아이템 수집 불가 대상 확인
+
+#### check_host_dubble.py
+
+```bash
+# 사용법
+# <zabbix_name> = 확인 대상 Zabbix Server
+# python 또는 python3
+$ python3 check_host_dubble.py
+Usage: python3 check_host_dubble.py <zabbix_name>
+
+$ python3 check_host_dubble.py STAGE
+로그아웃 완료
+host_name|agent_host_name
+p-mon-grafana-01_Testtest|p-mon-grafana-01_10.4.224.29
+p-mon-grafana-01_10.4.224.29_test|p-mon-grafana-01_10.4.224.29
 
 ```
-
 ### Zabbix 호스트 그룹에서 호스트 이름, IP 가져오기
 #### get_group_host.py
 ```bash
