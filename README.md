@@ -56,10 +56,10 @@ local서버에 Admin으로 로그인 하였습니다.
 ## 실행
 
 ### Zabbix에 수용 여부 확인 하기
-
+#### get_host.py
 ```bash
 # 수용 확인 할  호스트 리스트 작성
-❯ cat api_test_list
+$ cat api_test_list
 TEST_HOST_HP_G7
 TEST_SERVER
 TEST_HOST_10.10.10.10
@@ -83,7 +83,7 @@ TEST_HOST_10.10.10.10|10.4.224.29
 로그아웃 완료
 ```
 ### Zabbix에 수용된 전체 대상 확인
-
+#### get_all_host.py
 ```bash
 # 사용법
 # <zabbix_name> = 수용 확인 대상 Zabbix Server
@@ -114,6 +114,7 @@ IP|수용 대상|템플릿 적용|활성화
 ```
 
 ### Zabbix 호스트 그룹에서 호스트 이름, IP 가져오기
+#### get_group_host.py
 ```bash
 # 사용법
 # <zabbix_name> = 호스트 그룹이 존재하는 Zabbix Server
@@ -129,10 +130,10 @@ TEST_HOST_10.10.10.10|10.4.224.29
 ```
 
 ### Zabbix 호스트 그룹 묶기
-
+#### set_group_by_name.py
 ```bash
 # 그룹으로 묶을 호스트 작성
-❯ cat api_test_list
+$ cat api_test_list
 TEST_HOST_HP_G7
 TEST_SERVER
 TEST_HOST_10.10.10.10
