@@ -36,6 +36,7 @@ for line in proxys:
 
 host_list = getHostList(session)
 
+print(f"IP|수용 대상|템플릿 적용|활성화")
 if len(host_list) > 0:
     host_not_CRM_count = 0
     for line in host_list:
@@ -64,6 +65,7 @@ if len(host_list) > 0:
 
 
 print(f"총 검색 결과 수용 대수 {len(host_list)}")
-print(f"데이터 보존 호스트(_CRM이 호스트명에 포함 된 대상) 제외  {host_not_CRM_count}")
+if len(host_list) != host_not_CRM_count:
+    print(f"데이터 보존 호스트(_CRM이 호스트명에 포함 된 대상) 제외 {host_not_CRM_count}")
 
 logout(session)
