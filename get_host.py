@@ -3,11 +3,8 @@ from auth import login, logout
 import sys
 
 argv = sys.argv
-if len(argv) < 2:
-    print("Please input zabbix name.")
-    sys.exit(1)
-elif len(argv) < 3:
-    print("Please input host name.")
+if len(argv) < 3:
+    print("Usage: python3 get_host.py <zabbix_name> <host_list_file>")
     sys.exit(1)
 else:
     zabbix_name = argv[1]
@@ -23,16 +20,16 @@ def get_host_data(session,host_list):
     if getHosts == []:
         getHosts = session.host.get({"selectHosts": ["host"], "selectInterfaces": ["ip", "details"], "selectParentTemplates": [ "templateid" ], "output": ["host"], "filter": { "ip": host_list }})
     template_has_hosts = []
-    ready_add_hosts = []
+    no_template_has_host = []
     result = {}
 
     for host in getHosts:
         if len(host.get('parentTemplates')) > 0:
             template_has_hosts.append(host)
         else: 
-            ready_add_hosts.append(host)
+            no_template_has_host.append(host)
     result['template_has_hosts'] = template_has_hosts
-    result['ready_add_hosts'] = ready_add_hosts
+    result['no_template_has_host'] = no_template_has_host
 
     return result
 
@@ -49,8 +46,7 @@ host_list = get_host_data(session,search_list)
 template_has_hosts = host_list['template_has_hosts']
 
 ready_add_hosts = []
-
-for host in host_list['template_has_hosts']:
+for host in host_list['no_template_has_host']:
     if host not in template_has_hosts:
         ready_add_hosts.append(host)
 
@@ -70,7 +66,7 @@ if len(ready_add_hosts) > 0:
         print(f"{line.get('host')}|{line.get('interfaces')[0].get('ip')}")
 
 print(f"총 검색 대상 대수 {len(search_list)}")
-print(f"총 검색 결과 수용 대수 {len(template_has_hosts)}")
-print(f"총 검색 결과 수용 예정 {len(ready_add_hosts)}")
+print(f"총 검색 결과 기 수용 대수 (템플릿 적용) {len(template_has_hosts)}")
+print(f"총 검색 결과 수용 예정 (템플릿 미적용) {len(ready_add_hosts)}")
 
 logout(session)
