@@ -5,11 +5,8 @@ import sys
 import re
 
 argv = sys.argv
-if len(argv) < 2:
-    print("Please input zabbix name.")
-    sys.exit(1)
-elif len(argv) < 3:
-    print("Please input host name.")
+if len(argv) != 3:
+    print("Usage: python3 get_template_from_list.py <zabbix_name> <template_list_file>")
     sys.exit(1)
 else:
     zabbix_name = argv[1]

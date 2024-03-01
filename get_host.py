@@ -3,7 +3,7 @@ from auth import login, logout
 import sys
 
 argv = sys.argv
-if len(argv) < 3:
+if len(argv) != 3:
     print("Usage: python3 get_host.py <zabbix_name> <host_list_file>")
     sys.exit(1)
 else:

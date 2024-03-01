@@ -86,7 +86,7 @@ def search(zabbix_name, chunk_size = 30):
 if __name__ == "__main__":
 
     argv = sys.argv
-    if len(argv) < 2:
+    if len(argv) != 2:
         print("Usage: python3 check_host_dubble.py <zabbix_name> ")
         sys.exit(1)
     else:

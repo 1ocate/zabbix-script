@@ -37,7 +37,7 @@ def logout(session):
         exit()
 
 def main(argv):
-    if len(argv) < 2:
+    if len(argv) != 2:
         print("Usage: python3 auth.py <zabbix_name> ")
         sys.exit(1)
 
