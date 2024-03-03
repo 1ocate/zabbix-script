@@ -116,6 +116,27 @@ IP|수용 대상|템플릿 적용|활성화
 총 검색 결과 수용 대수 365
 로그아웃 완료
 ```
+
+### Zabbix 템플릿 확인
+#### get_template_from_list.py
+```bash
+$ cat template_list
+Template App Zabbix Server
+
+# 사용법
+# <zabbix_name> = 수용 확인 대상 Zabbix Server
+# <template_list_file> = 가져올 템플릿 리스트
+# python 또는 python3
+$ python3 get_template_from_list
+Usage: python3 get_template_from_list.py <zabbix_name> <template_list_file>
+
+$ python3 get_template_from_list.py local template_list
+Template App Zabbix Server@Zabbix server@Zabbix server: LLD queue@X@zabbix[lld_queue]@1m@1w@활성@X@@@@@
+Template App Zabbix Server@Zabbix server@Zabbix server: Preprocessing queue@X@zabbix[preprocessing_queue]@1m@1w@활성@X@@@@@
+Template App Zabbix Server@Zabbix server@Zabbix server: Utilization of alert manager internal processes, in %@X@zabbix[process,alert manager,avg,busy]@1m@1w@활성@O@@Zabbix server: Utilization of alert manager processes over 75%@{Template App Zabbix Server:zabbix[process,alert manager,avg,busy].avg(10m)}>75@{Template App Zabbix Server:zabbix[process,alert manager,avg,busy].avg(10m)}<65@Average@@활성
+Template App Zabbix Server@Zabbix server@Zabbix server: Utilization of alert syncer internal processes, in %@X@zabbix[process,alert syncer,avg,busy]@1m@1w@활성@O@@Zabbix server: Utilization of alert syncer processes over 75%@{Template App Zabbix Server:zabbix[process,alert syncer,avg,busy].avg(10m)}>75@{Template App Zabbix Server:zabbix[process,alert syncer,avg,busy].avg(10m)}<65@Average@@활성
+```
+
 ### Zabbix 수용 대상 중 Zabbix에 등록된 호스트명, Agent에서 가져오는 호스트명 다른 대상 확인
 * 10분 이상 큐 발생 및 Active 아이템 수집 불가 대상 확인
 
