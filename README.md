@@ -196,4 +196,54 @@ set_group_test 그룹이 생성되었습니다.
 STAGE의 set_group_test 업데이트가 완료 되었습니다.
 로그아웃 완료
 ```
+### Zabbix SNMP 수용 XML 생성
+#### ./create-host-import-xml_snmp.py
+
+```bash
+$ cat 1234.csv
+1,상면정보(그룹),호스트명,IP,템플릿이름,0,프록시명,2,커뮤니티값,,
+
+# 사용법
+# <CRM> = CRM작업번호
+# <date> = 수용 작업 날짜(그룹에 추가될 날짜)
+# python 또는 python3
+$ python3 create-host-import-xml_snmp.py
+Usage: create-host-import-xml <CRM> <date>
+  <CRM>: Work number
+  <date>: Work date in the format mmdd (e.g., 1015)
+
+$ python3 create-host-import-xml_snmp.py CRM1234 0304
+Success create zabbix host import xml.
+Please check the xml.
+Group name is 0304_수용_CRM1234
+./CRM1234.xml
+
+
+```
+
+### Zabbix IPMI 수용 XML 생성
+#### ./create-host-import-xml_ipmi.py
+
+```bash
+$ cat 5678.csv
+1,상면정보(그룹),호스트명,IP,템플릿이름,0,프록시명,,,IPMI_ID,IPMI_PD
+
+# 사용법
+# <CRM> = CRM작업번호
+# <date> = 수용 작업 날짜(그룹에 추가될 날짜)
+# python 또는 python3
+$ python3 create-host-import-xml_snmp.py
+Usage: create-host-import-xml_ipmi.py <CRM> <date>
+  <CRM>: Work number
+  <date>: Work date in the format mmdd (e.g., 1015)
+
+$ python3 create-host-import-xml_ipmi.py CRM5678 0304
+Success create zabbix host import xml.
+Please check the xml.
+Group name is 0304_수용_CRM5678
+./CRM5678.xml
+
+
+```
+
 
