@@ -74,6 +74,8 @@ for line in data:
     SubElement(host,'name').text = line[2]
     SubElement(host,'description').text = ''
     proxy = SubElement(host,'proxy')
+    SubElement(host,'ipmi_username').text= line[9]
+    SubElement(host,'ipmi_password').text= line[10]
     templates = SubElement(host, 'templates')
     template = SubElement(templates, 'template')
     SubElement(template, 'name').text = line[4]
@@ -89,13 +91,18 @@ for line in data:
     SubElement(interface,'type').text = 'IPMI'
     SubElement(interface,'ip').text = line[3]
     SubElement(interface,'port').text = '623'
-    details = SubElement(interface,'details')
-    SubElement(details,'community').text = line[8]
+    # details = SubElement(interface,'details')
+    # SubElement(details,'community').text = line[8]
     SubElement(interface, 'interface_ref').text = 'if1'
     SubElement(host,'inventory_mode').text = 'DISABLED'
     macros = SubElement(host, 'macros')
     macro = SubElement(macros, 'macro')
-    SubElement(macro, 'macro').text=''
+    SubElement(macro, 'macro').text='{$PASSWORD}'
+    SubElement(macro, 'type').text='SECRET_TEXT'
+    SubElement(macro, 'value').text=line[10]
+    macro2 = SubElement(macros, 'macro')
+    SubElement(macro2, 'macro').text='{$USER}'
+    SubElement(macro2, 'value').text=line[9]
 
 
 f.close()
