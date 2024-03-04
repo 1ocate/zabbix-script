@@ -1,7 +1,7 @@
 from zabbix_api import ZabbixAPI
 from auth import login, logout
 from collections import Counter
-import sys,time
+import sys,time, json
 
 
 def print_and_write(file, text):
@@ -48,7 +48,6 @@ def getHistoryData(session,itemids):
     return getHistoryData
 
 def search(zabbix_name, chunk_size = 30):
-
     session = login(zabbix_name)
     duplcate_hostids = get_duplicate_hostids(session)
     itemDatas = getItemData(session, duplcate_hostids)
@@ -66,7 +65,18 @@ def search(zabbix_name, chunk_size = 30):
         itemidsGroups = [itemids[i:i+chunk_size] for i in range(0, len(itemids), chunk_size)]
 
         for itemidsGroup in itemidsGroups:
-            historyDatas = getHistoryData(session,itemidsGroup)
+            try:
+                historyDatas = getHistoryData(session,itemidsGroup)
+            except: 
+                # API Time Out등 에러 발생 시 수동 점검 필요
+                historyDatas = getHistoryData(session,itemidsGroup)
+                result = {}
+                result['host_name'] = "에러 발생"
+                result['agent_host_name'] = "check_host_dubble.py 수동 실행 필요"
+                if result not in search_results:
+                    search_results.append(result)
+                return search_results
+
             for data in historyDatas:
                 itemid = data.get('itemid')
                 agent_host_name = data.get('value')
@@ -78,22 +88,21 @@ def search(zabbix_name, chunk_size = 30):
                     if result not in search_results:
                         search_results.append(result)
 
-            time.sleep(3)
+            time.sleep(1)
     logout(session)
     return search_results
 
 
 if __name__ == "__main__":
 
-    argv = sys.argv
-    if len(argv) != 2:
-        print("Usage: python3 check_host_dubble.py <zabbix_name> ")
-        sys.exit(1)
-    else:
-        zabbix_name = argv[1]
-
-    result = search(zabbix_name, 20)
-    print("host_name|agent_host_name")
-    for line in result:
-        print(f"{line['host_name']}|{line['agent_host_name']}")
+    f = open("config.json", encoding="UTF-8")
+    CONFIG = json.loads(f.read())
+    f.close()
+    ZabbixServerInfo = CONFIG['ZabbixServerInfo']
+    
+    print("zabbix_name|host_name|agent_host_name")
+    for zabbix_name in ZabbixServerInfo.keys():
+        result = search(zabbix_name, 10)
+        for line in result:
+            print(f"{zabbix_name}|{line['host_name']}|{line['agent_host_name']}")
 
