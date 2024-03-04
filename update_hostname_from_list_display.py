@@ -29,6 +29,7 @@ def changeHostName(session,host_id,ori_name,change_name,display_name):
     change_host_name = session.host.update({"hostid": host_id, "host": change_name })
     print(f"{ori_name[change_name]} to change {change_name} done.")
     if change_name != display_name:
+        print("표시명 변경을 진행합니다.")
         change_display_name = session.host.update({"hostid": host_id, "name": display_name })
         print(f"{change_name} to display_name change {display_name} done.")
 

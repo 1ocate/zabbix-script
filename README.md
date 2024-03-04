@@ -197,7 +197,7 @@ STAGE의 set_group_test 업데이트가 완료 되었습니다.
 로그아웃 완료
 ```
 ### Zabbix SNMP 수용 XML 생성
-#### ./create-host-import-xml_snmp.py
+#### create-host-import-xml_snmp.py
 
 ```bash
 $ cat 1234.csv
@@ -218,11 +218,10 @@ Please check the xml.
 Group name is 0304_수용_CRM1234
 ./CRM1234.xml
 
-
 ```
 
 ### Zabbix IPMI 수용 XML 생성
-#### ./create-host-import-xml_ipmi.py
+#### create-host-import-xml_ipmi.py
 
 ```bash
 $ cat 5678.csv
@@ -243,6 +242,49 @@ Please check the xml.
 Group name is 0304_수용_CRM5678
 ./CRM5678.xml
 
+```
+
+### Zabbix Host명 변경 
+#### update_hostname_from_list.py
+```bash
+$ cat host_change_name
+#변경할_호스트명,변경될_호스트명
+00_test_host_01,00_test_host_01_change_name
+
+# 사용법
+# <zabbix_name> = 작업 대상 Zabbix Server
+# <host_list_name_file> = 작업 내용 파일(형식: 변경할_호스트명,변경될_호스트명)
+# python 또는 python3
+$ python3 update_hostname_from_list.py
+Usage: python3 update_hostname_from_list.py <zabbix_name> <host_list_name_file>
+
+$ python3 update_hostname_from_list.py STAGE host_change_name
+호스트 이름 변경을 진행합니다.
+00_test_host_01 to change 00_test_host_01_change_name done.
+로그아웃 완료
+
+```
+
+### Zabbix Host명, 표시명 변경 
+#### update_hostname_from_list_display.py
+```bash
+$ cat host_change_name_display
+#변경할_호스트명,변경될_호스트명,표시명
+00_test_host_01,00_test_host_01_change_name,change_display_name
+
+# 사용법
+# <zabbix_name> = 작업 대상 Zabbix Server
+# <host_list_name_file> = 작업 내용 파일(형식: 변경할_호스트명,변경될_호스트명,표시명)
+# python 또는 python3
+$ python3 update_hostname_from_list_display.py
+Usage: python3 update_hostname_from_list_display.py <zabbix_name> <host_list_name_file>
+
+$ python3 update_hostname_from_list_display.py STAGE host_change_name_display
+호스트 이름 변경을 진행합니다.
+00_test_host_01 to change 00_test_host_01_change_name done.
+표시명 변경을 진행합니다.
+00_test_host_01_change_name to display_name change change_display_name done.
+로그아웃 완료
 
 ```
 

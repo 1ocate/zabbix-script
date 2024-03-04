@@ -3,11 +3,8 @@ from set_group_by_name import messUpdateHostId
 import sys
 
 argv = sys.argv
-if len(argv) < 2:
-    print("Please input zabbix name.")
-    sys.exit(1)
-elif len(argv) < 3:
-    print("Please input host name.")
+if len(argv) != 3:
+    print("Usage: python3 update_hostname_from_list.py <zabbix_name> <host_list_name_file>")
     sys.exit(1)
 else:
     zabbix_name = argv[1]
