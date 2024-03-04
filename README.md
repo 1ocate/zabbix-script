@@ -288,4 +288,9 @@ $ python3 update_hostname_from_list_display.py STAGE host_change_name_display
 
 ```
 
-
+## EXE 실행파일 생성
+```cmd
+ pip install --trusted-host pypi.python.org --trusted-host files.pythonhosted.org --trusted-host pypi.org -r requirements.txt
+ pyinstaller -F <실행파일 생성 스크립트명>.py
+ 
+```
