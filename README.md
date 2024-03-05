@@ -304,3 +304,12 @@ $ python3 update_hostname_from_list_display.py STAGE host_change_name_display
 
  
 ```
+
+## 이슈 사항
+### check_host_dubble.py 
+* 간헐적 발생으로 API 분석 후 개선 필요
+
+### 리스트 파일 작성시 유의 사항
+* host_list등 작성시 *.csv, *.txt 파일의 경우 암호화 되므로 확장자 없이 또는 *.log로 작성
+* utf-8 인코딩 사용
+
