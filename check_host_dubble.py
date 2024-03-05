@@ -94,15 +94,15 @@ def search(zabbix_name, chunk_size = 30):
 
 
 if __name__ == "__main__":
+    argv = sys.argv
+    if len(argv) != 2:
+        print("Usage: python3 check_host_dubble.py <zabbix_name> ")
+        sys.exit(1)
+    else:
+        zabbix_name = argv[1]
 
-    f = open("config.json", encoding="UTF-8")
-    CONFIG = json.loads(f.read())
-    f.close()
-    ZabbixServerInfo = CONFIG['ZabbixServerInfo']
-    
-    print("zabbix_name|host_name|agent_host_name")
-    for zabbix_name in ZabbixServerInfo.keys():
-        result = search(zabbix_name, 10)
-        for line in result:
-            print(f"{zabbix_name}|{line['host_name']}|{line['agent_host_name']}")
+    result = search(zabbix_name, 20)
+    print("host_name|agent_host_name")
+    for line in result:
+        print(f"{line['host_name']}|{line['agent_host_name']}")
 
