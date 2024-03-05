@@ -157,6 +157,10 @@ p-mon-grafana-01_Testtest|p-mon-grafana-01_10.4.224.29
 p-mon-grafana-01_10.4.224.29_test|p-mon-grafana-01_10.4.224.29
 
 ```
+#### 이슈 사항
+check_host_dubble.py 실행시 API 타임아웃으로 "check_host_dubble.py 수동 실행 필요"가 출력 되는 경우 스크립트 재실행
+간헐적 발생으로 API 분석 후 개선 필요
+
 ### Zabbix 호스트 그룹에서 호스트 이름, IP 가져오기
 #### get_group_host.py
 ```bash
