@@ -200,6 +200,8 @@ if len(item_list) == 0 and len(itemprototype_list) == 0 and len(discovery_list) 
     sys.exit()
 
 # 결과 출력 
+
+print("템플릿 명@구분@ITEM 명@Discovery@Key@수집 주기@보관 주기@아이템 활성@Triggers@CODE@Triggers Name@조건식@해소 조건식@Triggers Severity@설명@Triggers 활성 ")
 process_item_list(item_list, trigger_id_to_data)
 process_item_list(itemprototype_list, triggerprototype_id_to_data)
 process_item_list(discovery_list,'')

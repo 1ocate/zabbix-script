@@ -131,6 +131,7 @@ $ python3 get_template_from_list
 Usage: python3 get_template_from_list.py <zabbix_name> <template_list_file>
 
 $ python3 get_template_from_list.py local template_list
+템플릿 명@구분@ITEM 명@Discovery@Key@수집 주기@보관 주기@아이템 활성@Triggers@CODE@Triggers Name@조건식@해소 조건식@Triggers Severity@설명@Triggers 활성
 Template App Zabbix Server@Zabbix server@Zabbix server: LLD queue@X@zabbix[lld_queue]@1m@1w@활성@X@@@@@
 Template App Zabbix Server@Zabbix server@Zabbix server: Preprocessing queue@X@zabbix[preprocessing_queue]@1m@1w@활성@X@@@@@
 Template App Zabbix Server@Zabbix server@Zabbix server: Utilization of alert manager internal processes, in %@X@zabbix[process,alert manager,avg,busy]@1m@1w@활성@O@@Zabbix server: Utilization of alert manager processes over 75%@{Template App Zabbix Server:zabbix[process,alert manager,avg,busy].avg(10m)}>75@{Template App Zabbix Server:zabbix[process,alert manager,avg,busy].avg(10m)}<65@Average@@활성
