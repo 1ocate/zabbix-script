@@ -36,14 +36,21 @@ def logout(session):
         print("이미 로그아웃 되었습니다.")
         exit()
 
+def serverList():
+    server_list = CONFIG['ZabbixServerInfo']
+    return server_list
+
 def main(argv):
     if len(argv) != 2:
         print("Usage: python3 auth.py <zabbix_name> ")
-        sys.exit(1)
-
-    zabbix_name = argv[1]
-    session = login(zabbix_name)
-    logout(session)
+        print("\n<zabbix_name>")
+        server_list = serverList()
+        for server in server_list:
+            print(server)
+    else:
+        zabbix_name = argv[1]
+        session = login(zabbix_name)
+        logout(session)
 
 if __name__ == "__main__":
     argv = sys.argv
