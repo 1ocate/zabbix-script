@@ -1,7 +1,5 @@
 
 from zabbix_api import ZabbixAPI
-import math
-import time
 import sys
 import json
 
