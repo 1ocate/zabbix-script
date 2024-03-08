@@ -6,7 +6,7 @@ import sys
 import json
 
 
-def getHostList(session,zabbix_name,host_list):
+def getHostList(session,host_list):
     getHosts = session.host.get({"selectHosts": ["host"], "selectInterfaces": ["ip", "details"], "output": ["host"], "filter": { "host": host_list }})
     if getHosts == []:
         getHosts = session.host.get({"selectHosts": ["host"], "selectInterfaces": ["ip", "details"], "output": ["host"], "filter": { "ip": host_list }})
@@ -26,7 +26,7 @@ def messUpdateHostId(session,groupName,hostids,zabbix_name):
         answer = input(f"{groupName} 그룹을 생성할까요?")
         if answer == 'Y' or answer == 'y':
             getGroupid = createHostGroup(session,groupName)
-        else: 
+        else:
             print("그룹 적용을 중지 합니다.")
             exit()
     else:
@@ -43,13 +43,9 @@ def main():
         print("Usage: python3 set_group_by_name.py <zabbix_name> <group_name> <host_list_file>")
         sys.exit(1)
 
-    zabbix_name = sys.argv[1]
-    group_name = sys.argv[2]
+    zabbix_name = argv[1]
+    group_name = argv[2]
     host_list_file = sys.argv[3]
-    def print_and_write(file, text):
-        # print(text)
-        print(text, file=file)
-
 
     host_list = []
     file_path = host_list_file
@@ -60,7 +56,7 @@ def main():
 
 
     session = login(zabbix_name)
-    hostList = getHostList(session,zabbix_name,host_list)
+    hostList = getHostList(session,host_list)
 
     hostIds = []
     for line in hostList:
