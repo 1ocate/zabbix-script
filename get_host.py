@@ -26,11 +26,11 @@ def get_host_data(session,host_list):
     for host in getHosts:
         if len(host.get('parentTemplates')) > 0:
             template_has_hosts.append(host)
-        else: 
+        else:
             no_template_has_host.append(host)
+
     result['template_has_hosts'] = template_has_hosts
     result['no_template_has_host'] = no_template_has_host
-
     return result
 
 search_list = []
@@ -58,7 +58,6 @@ if len(template_has_hosts) > 0:
         if '_CRM' not in host_name:
             for index in interfaces:
                 print(f"{host_name}|{index.get('ip')}")
-                # print(f"{line.get('interfaces')[0].get('ip')}")
 
 if len(ready_add_hosts) > 0:
     print("수용 예정 대상")
