@@ -11,8 +11,7 @@ yum install -y zabbix-agent2 zabbix-agent2-plugin-*
 
 
 # PSK 파일 생성
-# openssl rand -hex 32 > "$SECRET_PSK_FILE"
-echo "b88b7f7c1df48ecf51d66b8dd19fa5429f3781a6518c680810232e57d29d2212" > "$SECRET_PSK_FILE"
+openssl rand -hex 32 > "$SECRET_PSK_FILE"
 chmod 640 "$SECRET_PSK_FILE"
 chown zabbix.zabbix "$SECRET_PSK_FILE"
 
@@ -30,7 +29,7 @@ cat <<EOL >> "$AGENT_CONF"
 TLSConnect=psk
 TLSAccept=psk
 TLSPSKFile=/etc/zabbix/zabbix_agent2.d/secret.psk
-TLSPSKIdentity=bluekey
+TLSPSKIdentity=zabbix
 EOL
 
 # Zabbix Agent 2 시작 및 자동 시작 설정
